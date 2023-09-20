@@ -1,0 +1,3 @@
+D:\Cpp_VS\Teor_ver_lab1\x64\Debug\Teor_ver_lab1.exe
+C:\Users\User\Desktop\МАГА_ЖИЕСТЬ\Teor_ver_lab1\x64\Debug\Teor_ver_lab1.exe
+D:\Cpp_VS\Teor_ver_lab1\Teor_ver_lab1\x64\Debug\Teor_ver_lab1.exe
