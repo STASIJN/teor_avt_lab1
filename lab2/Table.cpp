@@ -496,18 +496,81 @@ std::string to_bin(int number)
 
 }
 
+std::string to_bin(int number, int len)
+{
+	int i, beffor = -1;
+	std::string tmp = "";
+	int len_num = len;
+
+	while (number > 0) {
+
+		for (i = 0; pow(2, i) <= number; i++);
+		i -= 1;
+		if (beffor == -1) {
+			tmp += "1";
+			beffor = i;
+			len_num -= 1;
+		}
+		else if (beffor - i == 1) {
+			tmp += "1";
+			beffor = i;
+			len_num -= 1;
+		}
+		else {
+			beffor -= 1;
+			while (beffor > i) {
+				tmp += "0";
+				beffor -= 1;
+				len_num -= 1;
+			}
+			tmp += "1";
+			len_num -= 1;
+		}
+		number -= pow(2, i);
+
+		if (number == 0) {
+			while (beffor > 0) {
+				tmp += "0";
+				beffor -= 1;
+				len_num -= 1;
+			}
+		}
+
+	}
+
+	while (len_num) {
+		tmp = "0" + tmp;
+		len_num -= 1;
+	}
+
+	if (number == -1) {
+		tmp = "";
+		for (int i = 0; i < bin_len; i++) {
+			tmp += "-";
+		}
+	}
+	return tmp;
+
+}
+
+
 void Table::Create_CDNF(void)
 {
 	std::vector<std::string> tmp_vec;
 	std::string tmp_str;
 
 	for (int k = 0; k < bin_len; k++) {
-		for (int i = 0; i < this->grey_table.size(); i++) {
+		tmp_vec.clear();
+		std::cout << "Q" << k << std::endl;
+		for (int i = 0; i < this->grey_table.size(); i++) {	
 			for (int j = 0; j < this->grey_table[i].size(); j++) {
-
+				tmp_str = "";
 				if (this->grey_table[i][j].State != "-") {
 
-
+					if (this->grey_table[i][j].grey_str[k] == '1') {
+						tmp_str += to_bin(k, 2) + to_bin(j);
+						tmp_vec.push_back(tmp_str);
+					}
 
 				}
 
@@ -516,6 +579,7 @@ void Table::Create_CDNF(void)
 
 
 		}
+		this->CDNF.push_back(tmp_vec);
 	}
 
 }

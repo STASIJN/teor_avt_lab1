@@ -57,5 +57,7 @@ std::string get_str_state(std::string input_str, int start_index);
 int get_indx_state(std::string input_str, int start_index);
 
 std::string to_bin(int number);
+std::string to_bin(int number, int len);
+
 
 #endif

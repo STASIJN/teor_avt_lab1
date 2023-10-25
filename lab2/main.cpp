@@ -23,5 +23,9 @@ int main()
 	std::cout << "\nGrey_table\n";
 	Print_Table(struct_sin.grey_table, struct_sin.count_of_state);
 
+	std::cout << "\nCDNF\n";
+
+	struct_sin.Create_CDNF();
+
 	return 0;
 }
