@@ -1,1 +1,0 @@
-# teor_avt_lab1

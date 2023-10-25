@@ -1,52 +1,27 @@
 #include <iostream>
-#include <fstream>
+#include <vector>
 #include <string>
-#include "Impl.h"
-#include "DNF.h"
-#include <stdarg.h>
-
-using namespace std;
-
-
-
-
+#include "Connect.h"
+#include "Table.h"
+#include <fstream> 
+#include "Grey.h"
 
 int main()
 {
-	setlocale(LC_ALL, "Rus");
+	Table struct_sin;
 
-	ifstream scale;
-	ofstream mdnf;
-	string path = "scale.txt";
-	string mdnf_path = "mdnf.txt";
-	string SDNF;
-	scale.open(path);
+	struct_sin.GenerateGreyTable();
 
-	if (!scale.is_open()) {
+	std::cout << "\nf_table\n";
+	Print_Table(struct_sin.f_table);
 
-		cout << "Ошибка открытия файла!(\n" << endl;
+	std::cout << "\n\n";
 
-	}
-	else {
+	std::cout << "\ng_table\n";
+	Print_Table(struct_sin.g_table);
 
-		getline(scale, SDNF);
-		scale.close();
-		DNF dnf_c(SDNF);
-		dnf_c.Gluing();
-		dnf_c.MDNF();
-		SDNF = dnf_c.string_assembly();
-		cout << SDNF << endl;
-		mdnf.open(mdnf_path);
-		if (!mdnf.is_open()) {
-
-			cout << "Ошибка открытия файла!(\n" << endl;
-
-		}
-		else {
-			mdnf << SDNF;
-		}
-	}
-
+	std::cout << "\nGrey_table\n";
+	Print_Table(struct_sin.grey_table, struct_sin.count_of_state);
 
 	return 0;
 }
