@@ -130,11 +130,13 @@
   <ItemGroup>
     <ClInclude Include="Connect.h" />
     <ClInclude Include="Grey.h" />
+    <ClInclude Include="Key.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Connect.cpp" />
     <ClCompile Include="Grey.cpp" />
+    <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>

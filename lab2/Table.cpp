@@ -20,9 +20,9 @@ std::string Table::NextState(int input_signal, std::string current_state)
 			state_index += ((int)current_state[i] - 48) * pow(10,(cur_state_len - i));
 			i++;
 		}
-		//state_index -=;
+		state_index -= 1;
 
-		i = 1;
+		i = 0;
 		int j = 0;
 		while (i != state_index) {
 			if (next_state[j] == ' ') {
@@ -32,7 +32,7 @@ std::string Table::NextState(int input_signal, std::string current_state)
 		}
 		
 		std::string tmp = "";
-		while (next_state[j] != ' ') {
+		while (next_state[j] != ' ' && j != next_state.length()) {
 			tmp += next_state[j];
 			j++;	
 		}
@@ -95,7 +95,9 @@ std::string Table::CurrentOutput(int input_signal, std::string current_state)
 			i++;
 		}
 
-		i = 1;
+		state_index -= 1;
+
+		i = 0;
 		int j = 0;
 		while (i != state_index) {
 			if (current_output[j] == ' ') {
@@ -105,7 +107,7 @@ std::string Table::CurrentOutput(int input_signal, std::string current_state)
 		}
 	
 		std::string tmp = "";
-		while (current_output[j] != ' ') {
+		while (current_output[j] != ' ' && j != current_output.length()) {
 			tmp += current_output[j];
 			j++;
 		}
@@ -177,7 +179,7 @@ Table::Table()
 
 	this->count_of_state = get_state_position(f_table[0]).size();
 	this->count_of_Dtrig = ceil(log2(this->count_of_state));
-	this->count_of_input = this->f_table.size();
+	this->count_of_input = ceil(log2(this->f_table.size()));
 	bin_len = this->count_of_Dtrig;
 
 	for (int i = 0; i < bin_len; i++) {
@@ -205,7 +207,7 @@ Table::Table()
 			this->g_table.push_back(tmp);
 		}
 	}
-	this->count_of_output = max_output - 48 + 1;
+	this->count_of_output = max_output - 48;
 	g_table_i.close();
 
 
@@ -318,12 +320,13 @@ void Table::GenerateGreyTable(void)
 	int tmp_index;
 	
 
+
 	for (int i = 0; i < len_table; i++) {
 		tmp_grey_str.clear();
 		tmp_state_position = get_state_position(this->f_table[i]);
 		for (int j = 0; j < widt_table; j++) {
 			tmp_index = get_indx_state(this->f_table[i], tmp_state_position[j]);
-			tmp_grey_str.push_back(Grey(tmp_index, to_bin(tmp_index ^ (tmp_index>>1))));
+			tmp_grey_str.push_back(Grey(tmp_index, to_bin((tmp_index-1) ^ ((tmp_index-1)>>1))));
 		}
 		this->grey_table.push_back(tmp_grey_str);
 	}
@@ -410,7 +413,7 @@ void Print_Table(std::vector<std::vector<Grey>> table, int count_state)
 	}
 	std::cout << std::endl;
 	for (int i = 1; i < count_state+1; i++) {
-		std::cout<< S(i) << "=" << to_bin(i ^ (i >> 1)) << "; ";
+		std::cout<< S(i) << "=" << to_bin((i-1) ^ ((i-1) >> 1)) << "; ";
 	}
 	std::cout << std::endl;
 	for (int i = 0; i < table[0].size(); i++) {
@@ -559,7 +562,7 @@ void Table::Create_CDNF(void)
 	std::vector<std::string> tmp_vec;
 	std::string tmp_str;
 
-	for (int k = 0; k < bin_len; k++) {
+	for (int k = bin_len - 1; k >= 0; k--) {
 		tmp_vec.clear();
 		std::cout << "Q" << k << std::endl;
 		for (int i = 0; i < this->grey_table.size(); i++) {	
@@ -567,9 +570,10 @@ void Table::Create_CDNF(void)
 				tmp_str = "";
 				if (this->grey_table[i][j].State != "-") {
 
-					if (this->grey_table[i][j].grey_str[k] == '1') {
-						tmp_str += to_bin(k, 2) + to_bin(j);
+					if (this->grey_table[i][j].grey_str[bin_len - 1 - k] == '1') {
+						tmp_str += to_bin(i, this->count_of_input) + to_bin(G(j+1));
 						tmp_vec.push_back(tmp_str);
+						std::cout << tmp_str << std::endl;
 					}
 
 				}
@@ -584,3 +588,348 @@ void Table::Create_CDNF(void)
 
 }
 
+int to_int(std::string impl)
+{
+	int tmp = 0;
+	int len = std::strlen(&impl[0]);
+	for (int i = len - 1; i >= 0; i--) {
+		if (impl[i] == '1') {
+			tmp += pow(2, len - i - 1 );
+		}
+
+	}
+	
+	return tmp;
+}
+
+void Table::CreateQCDNF(void)
+{
+	std::string tmp_str;
+	bool got_it;
+	int i;
+	for (int k = 0; k < this->CDNF.size(); k++) {
+		tmp_str = "";
+		for (int j = 0; j < pow(2,this->count_of_input + this->count_of_Dtrig); j++) {
+			got_it = false;
+			for (i = 0; i < this->CDNF[k].size(); i++) {
+				if (j == to_int(this->CDNF[k][i])) {
+					got_it = true;
+					break;
+				}
+							
+			}
+			if (got_it) {
+				tmp_str += "1";
+			}
+			else {
+				tmp_str += "0";
+			}
+		}
+		this->Q_CDNF.push_back(tmp_str);
+	}
+
+}
+
+void Table::CreateOutputCDNF(void)
+{
+	std::string tmp_str;
+	bool got_it;
+	int i;
+	for (int k = 0; k < this->CDNF_out.size(); k++) {
+		tmp_str = "";
+		for (int j = 0; j < pow(2, this->count_of_input + this->count_of_Dtrig); j++) {
+			got_it = false;
+			for (i = 0; i < this->CDNF_out[k].size(); i++) {
+				if (j == to_int(this->CDNF_out[k][i])) {
+					got_it = true;
+					break;
+				}
+
+			}
+			if (got_it) {
+				tmp_str += "1";
+			}
+			else {
+				tmp_str += "0";
+			}
+		}
+		this->O_CDNF.push_back(tmp_str);
+	}
+}
+
+void Table::CreateOCDNF(void)
+{
+
+	std::vector<std::string> tmp_vec;
+	std::string tmp_str;
+	std::vector<int> tmp_ind;
+	tmp_ind = get_state_position(g_table[0]);
+	int len = tmp_ind.size();
+
+	for (int k = 1; k <= this->count_of_output; k++) {
+		tmp_vec.clear();
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < g_table.size(); j++) {
+				tmp_ind = get_state_position(g_table[j]);
+				tmp_str = get_str_state(g_table[j], tmp_ind[i]);
+				if (std::to_string(k) == tmp_str) {
+					tmp_str = "" + to_bin((j), 2) + to_bin(G(i + 1));
+					tmp_vec.push_back(tmp_str);
+				}
+			}
+
+		}
+		this->CDNF_out.push_back(tmp_vec);
+	}
+
+}
+
+void Table::WriteToFile()
+{
+	int len = Q_CDNF.size();
+	for (int i = 0; i < len; i++) {
+		Write_To_File("Q" + std::to_string(i) + ".txt", this->Q_CDNF[len - 1 - i]);
+
+	}
+
+	len = O_CDNF.size();
+	for (int i = 0; i < len; i++) {
+		Write_To_File("O" + std::to_string(i+1) + ".txt", this->O_CDNF[len - 1 - i]);
+
+	}
+	
+
+}
+
+void Write_To_File(std::string path, std::string CDNF)
+{
+	std::ofstream out_cdnf;
+	out_cdnf.open(path);
+	out_cdnf << CDNF;
+	out_cdnf.close();
+
+}
+
+void Overwrite_Minimal_File(std::string path)
+{
+	std::ifstream in_stream;
+	std::ofstream out_stream;
+	std::vector<std::string> tmp_vec;
+	in_stream.open("D://Мага//ТеорАвт//lab2//lab1//Project1//x64//Debug//mdnf.txt");
+	out_stream.open(path);
+	while (!in_stream.eof()) {
+		std::string tmp;
+		getline(in_stream, tmp);
+		tmp_vec.push_back(tmp);
+	}
+	for (int i = 0; i < tmp_vec.size(); i++) {
+		out_stream << tmp_vec[i]+"\n";
+	}
+	in_stream.close();
+
+}
+
+void Table::OverwriteMinimalFile()
+{
+	std::cout << std::endl;
+	std::cout << "Q3_mini" << std::endl;
+	system("Project1.exe Q3.txt Q3.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("Q3.txt");
+	std::cout << std::endl;
+	std::cout << "Q2_mini" << std::endl;
+	system("Project1.exe Q2.txt Q2.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("Q2.txt");
+	std::cout << std::endl;
+	std::cout << "Q1_mini" << std::endl;
+	system("Project1.exe Q1.txt Q1.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("Q1.txt");
+	std::cout << std::endl;
+	std::cout << "Q0_mini" << std::endl;
+	system("Project1.exe Q0.txt Q0.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("Q0.txt");
+	std::cout << std::endl;
+	std::cout << "O2_mini" << std::endl;
+	system("Project1.exe O2.txt O2.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("O2.txt");
+	std::cout << std::endl;
+	std::cout << "O1_mini" << std::endl;
+	system("Project1.exe O1.txt O1.txt");
+	std::cout << std::endl;
+	//Overwrite_Minimal_File("O1.txt");
+
+
+}
+
+void Table::KeyGen()
+{
+	std::ifstream key_stream;
+	std::string key_path = "key.txt";
+
+	std::vector<std::string> tmp_vec;
+
+	key_stream.open(key_path);
+	if (!key_stream.is_open()) {
+
+		std::cout << "Ошибка открытия файла!(\n" << std::endl;
+
+	}
+	else {
+		while (!key_stream.eof()) {
+			std::string tmp;
+			getline(key_stream, tmp);
+			tmp_vec.push_back(tmp);
+		}
+	}
+	key_stream.close();
+
+	std::vector<int> input_pos = get_state_position(tmp_vec[0]);
+	std::vector<int> state_pos = get_state_position(tmp_vec[1]);
+	std::vector<int> output_pos = get_state_position(tmp_vec[2]);
+	std::string input_str;
+	std::string state_str;
+	std::string output_str;
+
+	for (int i = 0; i < state_pos.size(); i++) {
+		input_str = get_str_state(tmp_vec[0], input_pos[i]);
+		state_str = get_str_state(tmp_vec[1], state_pos[i]);
+		output_str = get_str_state(tmp_vec[2], output_pos[i]);
+
+		Check_Key.push_back(Key(input_str, state_str, output_str));
+	}
+	while(!CheckCorrectnessKey());
+}
+
+int I(std::string str)
+{
+	int s = 0, len = str.length();
+	for (int i = 0; i < len; i++) {
+		s += (int(str[i]) - 48) * pow(10, len - 1 - i);
+
+	}
+	return s;
+}
+
+bool Table::CheckCorrectnessKey()
+{
+	bool ret = true;
+
+	std::string tmp_state;
+	std::string tmp_output;
+	int len = Check_Key.size();
+
+
+	for (int i = 0; i < len; i++) {
+		if (i < len-1) {
+			tmp_state = NextState(I(Check_Key[i].Input), Check_Key[i].State);
+			if (tmp_state != Check_Key[i + 1].State) {
+				ret = false;
+				break;
+			}
+		}
+		tmp_output = CurrentOutput(I(Check_Key[i].Input), Check_Key[i].State);
+		if (tmp_output != Check_Key[i].Output) {
+			ret = false;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void Table::ReadMDNF()
+{
+	std::ifstream mdnf_file;
+	std::vector<std::string> tmp_vec;
+
+	for (int i = 0; i < 4; i++) {
+		tmp_vec.clear();
+		mdnf_file.open("Q"+std::to_string(i)+".txt");
+		if (!mdnf_file.is_open()) {
+
+			std::cout << "Ошибка открытия файла!(\n" << std::endl;
+
+		}
+		else {
+			while (!mdnf_file.eof()) {
+				std::string tmp;
+				getline(mdnf_file, tmp);
+				if (tmp != "") {
+					tmp_vec.push_back(tmp);
+				}
+			}
+		}
+		mdnf_file.close();
+		Q_MDNF.push_back(tmp_vec); 
+	}
+
+	for (int i = 0; i < 2; i++) {
+		tmp_vec.clear();
+		mdnf_file.open("O" + std::to_string(i+1) + ".txt");
+		if (!mdnf_file.is_open()) {
+
+			std::cout << "Ошибка открытия файла!(\n" << std::endl;
+
+		}
+		else {
+			while (!mdnf_file.eof()) {
+				std::string tmp;
+				getline(mdnf_file, tmp);
+				if (tmp != "") {
+					tmp_vec.push_back(tmp);
+				}
+			}
+		}
+
+		mdnf_file.close();
+		O_MDNF.push_back(tmp_vec);
+	}
+}
+
+std::string Check_Compliance(std::vector<std::string> mdnf, std::string required_number, std::string input)
+{
+	std::string ret = "0";
+	int state_len = bin_len;
+	int mdnf_len;
+	required_number = to_bin(I(input)-1, 2) + to_bin(G(I(required_number)));
+	for (auto a : mdnf) {
+		mdnf_len = a.length();
+		ret = "1";
+		for (int i = 0; i < mdnf_len; i++) {
+			if (required_number[i] != a[i] && a[i] != '-') {
+				ret = "0";
+				break;
+			}
+		}
+		if (ret == "1") {
+			break;
+		}
+	}
+
+	return ret;
+}
+
+bool Table::CheckCorrectnessOfMinimisationByKey()
+{
+	std::string tmp_y, tmp_s;
+	bool ret = true;
+
+	for (int k = 0; k < Check_Key.size(); k++) {
+		tmp_y = "" + Check_Compliance(O_MDNF[0], Check_Key[k].State, Check_Key[k].Input) + Check_Compliance(O_MDNF[1], Check_Key[k].State, Check_Key[k].Input);
+		tmp_s = "" + Check_Compliance(Q_MDNF[0], Check_Key[k].State, Check_Key[k].Input) + Check_Compliance(Q_MDNF[1], Check_Key[k].State, Check_Key[k].Input) + Check_Compliance(Q_MDNF[2], Check_Key[k].State, Check_Key[k].Input) + Check_Compliance(Q_MDNF[3], Check_Key[k].State, Check_Key[k].Input);
+		
+
+
+		if (std::to_string(to_int(tmp_y)) != Check_Key[k].Output && Check_Key[k].Output != "-") {
+			ret = false;
+			break;
+		}
+
+	}
+
+	return ret;
+}

@@ -9,6 +9,7 @@
 int main()
 {
 	Table struct_sin;
+	setlocale(0, "RUSSIAN");
 
 	struct_sin.GenerateGreyTable();
 
@@ -23,9 +24,24 @@ int main()
 	std::cout << "\nGrey_table\n";
 	Print_Table(struct_sin.grey_table, struct_sin.count_of_state);
 
+	struct_sin.KeyGen();
+
 	std::cout << "\nCDNF\n";
 
 	struct_sin.Create_CDNF();
+	struct_sin.CreateOCDNF();
+	struct_sin.CreateQCDNF();
+	struct_sin.CreateOutputCDNF();
+
+	struct_sin.WriteToFile();
+
+	struct_sin.OverwriteMinimalFile();
+
+	struct_sin.ReadMDNF();
+
+	while(!struct_sin.CheckCorrectnessOfMinimisationByKey());
+
+	std::cout << "Проверенно ключем, все гуд)" << std::endl;
 
 	return 0;
 }

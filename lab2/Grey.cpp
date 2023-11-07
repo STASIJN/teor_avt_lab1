@@ -10,7 +10,7 @@ Grey::Grey(int state_index, std::string str)
 	else {
 		this->State = S(state_index);
 
-		this->grey_code = state_index ^ (state_index >> 1);
+		this->grey_code = (state_index-1) ^ ((state_index-1) >> 1);
 
 	}
 	this->grey_str = str;

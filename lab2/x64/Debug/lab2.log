@@ -1,2 +1,26 @@
-﻿  main.cpp
-  lab2.vcxproj -> D:\Мага\ТеорАвт\teor_avt_lab1\x64\Debug\lab2.exe
+﻿  Table.cpp
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(18,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(20,48): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(92,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(94,48): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(180,60): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(181,29): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(182,29): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(219,10): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(233,27): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(318,16): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(319,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(378,14): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(385,34): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(475,17): warning C4244: -=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(532,16): warning C4244: -=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(594,10): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(597,14): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(667,10): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(689,10): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(695,19): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(809,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(811,27): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(823,10): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\lab2\Table.cpp(900,22): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+  lab2.vcxproj -> D:\Мага\ТеорАвт\lab2\teor_avt_lab1-lab2\teor_avt_lab1-lab2\x64\Debug\lab2.exe
